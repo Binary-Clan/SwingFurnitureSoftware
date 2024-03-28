@@ -5,24 +5,28 @@ import java.awt.event.ActionListener;
 
 public class LoadingProgress extends JFrame {
 
-    private final JProgressBar progressBar;
-    private final JLabel loadingLabel;
+    private JProgressBar progressBar;
+    private JLabel loadingLabel;
+    private Timer progressTimer;
     private Timer blinkTimer;
 
     public LoadingProgress() {
         setTitle("Generating Progress");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1500, 700);
+        setSize(600, 350);
         setLocationRelativeTo(null); // Center the frame on the screen
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(150, 100, 21)); // Set light brown background color
+        getContentPane().setBackground(new Color(240, 240, 240)); // Set light gray background color
+
+        // Create a panel for the title
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel titleLabel = new JLabel("Generation in Progress");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Set font to bold Arial, adjust size as needed
+        titlePanel.add(titleLabel);
 
         // Create a panel for the logo
         JPanel logoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         ImageIcon logoIcon = new ImageIcon("assets/Sofa scape.png"); // Change "logo.png" to your image file path
         JLabel logoLabel = new JLabel(logoIcon);
-        // Add margin from the top to the image
-        logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         logoPanel.add(logoLabel);
 
         // Create a panel for the progress bar
@@ -31,16 +35,18 @@ public class LoadingProgress extends JFrame {
         progressBar.setStringPainted(true);
         progressBarPanel.add(progressBar);
 
-        add(logoPanel, BorderLayout.NORTH);
-        add(progressBarPanel, BorderLayout.CENTER);
-
-        // Create a label for displaying "Generating..."
+        // Create a panel for the loading label
+        JPanel loadingLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         loadingLabel = new JLabel("Generating...");
-        loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        loadingLabel.setForeground(Color.WHITE);
-        // Add margin from the top to the Generating label
-        loadingLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-        add(loadingLabel, BorderLayout.SOUTH);
+        loadingLabel.setForeground(new Color(0, 102, 204)); // Set text color to blue
+        loadingLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Set font to bold Arial, adjust size as needed
+        loadingLabelPanel.add(loadingLabel);
+
+        // Add panels to the frame
+        add(titlePanel, BorderLayout.NORTH);
+        add(logoPanel, BorderLayout.CENTER);
+        add(progressBarPanel, BorderLayout.CENTER);
+        add(loadingLabelPanel, BorderLayout.SOUTH);
 
         // Simulate progress
         simulateProgress();
@@ -49,27 +55,27 @@ public class LoadingProgress extends JFrame {
     }
 
     private void simulateProgress() {
-        int delay = 200; // Milliseconds
-        Timer timer = new Timer(delay, new ActionListener() {
+        int delay = 100; // Milliseconds
+        progressTimer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int value = progressBar.getValue();
                 if (value < progressBar.getMaximum()) {
                     progressBar.setValue(value + 1);
                 } else {
-                    ((Timer) e.getSource()).stop();
-                    loadingLabel.setText("Generating complete!");
-                    progressBar.setString("Generating complete!");
-                    progressBar.setStringPainted(true);
-                    blinkTimer.stop();
-                    JOptionPane.showMessageDialog(LoadingProgress.this, "Generating Complete!");
+                    progressTimer.stop(); // Stop the progress timer
+                    loadingLabel.setText("Generated"); // Change label text to "Generated"
+                    progressBar.setString("100%"); // Set progress bar text to "100%"
+                    JOptionPane.showMessageDialog(LoadingProgress.this, "Generation Complete!");
+                    blinkTimer.stop(); // Stop the blink timer
                 }
             }
         });
-        timer.start();
+        progressTimer.start();
 
         // Blinking loading label
-        blinkTimer = new Timer(600, new ActionListener() {
+        int blinkDelay = 500; // Milliseconds
+        blinkTimer = new Timer(blinkDelay, new ActionListener() {
             private boolean isVisible = true;
 
             @Override
