@@ -55,7 +55,7 @@ public class LoadingProgress extends JFrame {
     }
 
     private void simulateProgress() {
-        int delay = 100; // Milliseconds
+        int delay = 5; // Milliseconds
         progressTimer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,8 +66,10 @@ public class LoadingProgress extends JFrame {
                     progressTimer.stop(); // Stop the progress timer
                     loadingLabel.setText("Generated"); // Change label text to "Generated"
                     progressBar.setString("100%"); // Set progress bar text to "100%"
-                    JOptionPane.showMessageDialog(LoadingProgress.this, "Generation Complete!");
                     blinkTimer.stop(); // Stop the blink timer
+
+                    // Show message dialog with custom button
+                    showMessageDialogWithCustomButton();
                 }
             }
         });
@@ -86,6 +88,37 @@ public class LoadingProgress extends JFrame {
         });
         blinkTimer.start();
     }
+
+
+    private void showMessageDialogWithCustomButton() {
+        // Custom button text
+        final JOptionPane optionPane = new JOptionPane("Generation Complete!",
+                JOptionPane.INFORMATION_MESSAGE,
+                JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+
+        final JDialog dialog = new JDialog(this, "Dialog", true);
+        dialog.setContentPane(optionPane);
+
+        // Adding "Show 3D View" button
+        JButton show3DViewButton = new JButton("Show 3D View");
+        show3DViewButton.addActionListener(e -> {
+//            dialog.dispose(); // Close the dialog
+            dispose();
+            setVisible(false);
+
+//            LoadingProgress.this.dispose(); // Close the current window
+//            SwingUtilities.invokeLater(ModelViewer::new);
+            ModelViewer.main(new String[]{});
+        });
+
+        optionPane.add(show3DViewButton);
+
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoadingProgress::new);
