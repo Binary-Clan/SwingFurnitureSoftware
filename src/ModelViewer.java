@@ -27,10 +27,27 @@ public class ModelViewer {
             JButton returnButton = new JButton("Return");
 
             // Add action listeners for the buttons
-            saveButton.addActionListener(e -> System.out.println("Save"));
-            editButton.addActionListener(e -> System.out.println("Edit"));
-            deleteButton.addActionListener(e -> System.out.println("Delete"));
-            returnButton.addActionListener(e -> System.out.println("Hello"));
+            saveButton.addActionListener(e -> {
+                JOptionPane.showMessageDialog(frame,
+                        "Successfully saved to your directory",
+                        "Save Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
+            });
+
+            editButton.addActionListener(e -> frame.dispose());
+
+            deleteButton.addActionListener(e -> {
+                int result = JOptionPane.showConfirmDialog(frame,
+                        "Are you sure?",
+                        "Confirm Delete",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (result == JOptionPane.YES_OPTION) {
+                    frame.dispose();
+                }
+            });
+
+            returnButton.addActionListener(e -> frame.dispose());
 
             // Add buttons to the panel
             buttonPanel.add(saveButton);
@@ -43,7 +60,8 @@ public class ModelViewer {
 
             frame.setSize(800, 600);
             frame.setVisible(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             Platform.runLater(() -> {
                 initFX(fxPanel);
@@ -59,4 +77,5 @@ public class ModelViewer {
         Scene scene = new Scene(webView);
         fxPanel.setScene(scene);
     }
+
 }
