@@ -16,13 +16,12 @@ public class Login extends JDialog {
 
     public boolean isAuthenticated = false;
 
-    public Login(JFrame parent) {
-        super(parent);
+    public Login() {
         setTitle("Login");
         setContentPane(loginPanel);
         setMinimumSize(new Dimension(450,474));
         setModal(true);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 
@@ -84,15 +83,27 @@ public class Login extends JDialog {
 
 
     private void openHomePage() {
-        Home homePage = new Home((JFrame)SwingUtilities.getWindowAncestor(SwingUtilities.getWindowAncestor(Login.this)));
+        dispose();
+        Home homePage = new Home();
         homePage.setVisible(true);
+
          // Close the login dialog
     }
 
     private void openRegisterPage() {
+//        dispose();
         Register register = new Register((JFrame)SwingUtilities.getWindowAncestor(SwingUtilities.getWindowAncestor(Login.this)));
         register.setVisible(true);
+
         // Close the login dialog
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame parentFrame = new JFrame();
+            Login loginDialog = new Login();
+            loginDialog.setVisible(true);
+        });
     }
 
 
